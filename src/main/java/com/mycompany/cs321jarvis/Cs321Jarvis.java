@@ -26,15 +26,21 @@ public class Cs321Jarvis {
     
     public static void main (String[] args) {
         
-
+        String text_line = "";
         MagicStrings.setRootPath();
 
         AIMLProcessor.extension =  new PCAIMLProcessorExtension();
-        mainFunction(args);
+        System.out.print("1 or 2: ");
+        text_line = IOUtils.readInputTextLine();
+        if("1".equals(text_line)) 
+            mainFunction(args);
+        else
+            mainFunction2(args);
     }
     public static void mainFunction (String[] args) {
-        
+        System.out.println("Begining Function 1");
         //ADDED
+        /*
         try{
             String resources_path = getResourcesPath();
             System.out.println(resources_path);
@@ -68,6 +74,7 @@ public class Cs321Jarvis {
         } catch (Exception e){
             e.printStackTrace();
         }
+        */
         //END ADDED
         
         
@@ -128,6 +135,7 @@ public class Cs321Jarvis {
     }
     
     //ADDED
+    /*
     private static String getResourcesPath(){
         File curr_dir = new File(".");
         String file_path = curr_dir.getAbsolutePath();
@@ -137,6 +145,7 @@ public class Cs321Jarvis {
         System.out.println(resources_path);
         return resources_path;
     }
+    */
     //END ADDED
     
     
@@ -249,16 +258,68 @@ public class Cs321Jarvis {
             ex.printStackTrace();
         }
     }
+    
+    
+    
+    // Main func 2
+    //private static final boolean TRACEMODE = false;
+    //static String bot_name = "alice2";
+    
+    public static void mainFunction2(String[] args){
+                System.out.println("Begining Function 2");
+        try{
+            String resources_path = getResourcesPath();
+            System.out.println(resources_path);
+            MagicBooleans.trace_mode = TRACEMODE;
+            Bot bot = new Bot("alice2", resources_path);
+            Chat chat_session = new Chat(bot);
+            bot.brain.nodeStats();
+            String text_line = "";
+            while(true){
+                System.out.print("Human: ");
+                text_line = IOUtils.readInputTextLine();
+                if((text_line == null) || (text_line.length() == 1))
+                    text_line = MagicStrings.null_input;
+                if(text_line.equals("wq")){
+                    System.exit(0);
+                }else if(text_line.equals("wq")){
+                    bot.writeQuit();
+                    System.exit(0);
+                }else{
+                    String request = text_line;
+                    if(MagicBooleans.trace_mode)
+                        System.out.append("STATE=" + request + ":THAT=" + ((History) chat_session.thatHistory.get(0)).get(0)+":TOPIC=" + chat_session.predicates.get("topic"));
+                    String response = chat_session.multisentenceRespond(request);
+                    while(response.contains("It")) // HAD AMP
+                        response = response.replace("It", "It"); // FIRST ONE HAD AMP
+                    while(response.contains("gt")) // HAD AMP
+                        response = response.replace("gt", "gt"); // FIRST ONE HAD AMP
+                    System.out.println("Jarvis : " + response);
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    private static String getResourcesPath(){
+        File curr_dir = new File(".");
+        String file_path = curr_dir.getAbsolutePath();
+        file_path = file_path.substring(0, file_path.length()-2);
+        System.out.println(file_path);
+        String resources_path = file_path + File.separator + "src" + File.separator + "main" + File.separator + "resources";
+        System.out.println(resources_path);
+        return resources_path;
+    }
 
 
 }
 
 /*
-public class Cs321Jarvis {
+public class Cs321Jarvis{
     private static final boolean TRACEMODE = false;
     static String bot_name = "alice2";
     
-    public static void main(String[] args){
+    public static void mainFunction2(String[] args){
         try{
             String resources_path = getResourcesPath();
             System.out.println(resources_path);
