@@ -12,35 +12,83 @@ import java.io.*;
 import java.util.HashMap;
 import org.alicebot.ab.*;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.border.EmptyBorder;
+
+//import com.mycompany.cs321jarvis.jarvisGUI;
+
 /**
  *
  * @author matthewdonoho
  */
 
-public class Cs321Jarvis {
-
+public class Cs321Jarvis extends JFrame{
+    
     // ADDED
     private static final boolean TRACEMODE = false;
     static String bot_name = "alice2";
     
+    static JPanel chatPanel;
+    static JTextField inputField;
+    static JButton sendButton;
+    static JScrollPane scrollPane;
     
-    public static void main (String[] args) {
-        
-        String text_line = "";
-        MagicStrings.setRootPath();
+    
+    
+    // GUI
+    public Cs321Jarvis(){
+        // Set up the main frame
+        setTitle("Jarvis");
+        setSize(400, 500);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
 
-        AIMLProcessor.extension =  new PCAIMLProcessorExtension();
-        System.out.print("1 or 2: ");
-        text_line = IOUtils.readInputTextLine();
-        if("1".equals(text_line)) 
-            mainFunction(args);
-        else
-            mainFunction2(args);
+        // Chat panel to hold messages
+        chatPanel = new JPanel();
+        chatPanel.setLayout(new BoxLayout(chatPanel, BoxLayout.Y_AXIS));  // Stacks messages vertically
+        chatPanel.setBackground(new Color(20, 20, 20)); // Light iMessage-style background color
+
+        // Scrollable chat panel
+        scrollPane = new JScrollPane(chatPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        add(scrollPane, BorderLayout.CENTER);
+
+        // Input field and send button at the bottom
+        JPanel inputPanel = new JPanel(new BorderLayout());
+        inputField = new JTextField();
+        sendButton = new JButton("Send");
+
+        inputPanel.add(inputField, BorderLayout.CENTER);
+        inputPanel.add(sendButton, BorderLayout.EAST);
+        add(inputPanel, BorderLayout.SOUTH);
+        
+        
+        // Action for the send button
+        sendButton.addActionListener((ActionEvent e) -> {
+            sendMessage();
+        });
+
+        // Action for pressing Enter in the input field
+        inputField.addActionListener((ActionEvent e) -> {
+            sendMessage();
+        });
+        
+        // Make the frame visible
+        setVisible(true);
     }
-    public static void mainFunction (String[] args) {
-        System.out.println("Begining Function 1");
-        //ADDED
-        /*
+    
+    // ADDED GUI
+    
+    private void sendMessage(){
+        System.out.println("Send_Message_Class");
+        //String message = inputField.getText().trim();
+        //text = new JTextField(message);
+        //inputField = new JTextField(text);
         try{
             String resources_path = getResourcesPath();
             System.out.println(resources_path);
@@ -49,11 +97,35 @@ public class Cs321Jarvis {
             Chat chat_session = new Chat(bot);
             bot.brain.nodeStats();
             String text_line = "";
+            
+            // add the invoce later here but in the main func 2 
             while(true){
+                //text_line = "";
                 System.out.print("Human: ");
-                text_line = IOUtils.readInputTextLine();
-                if((text_line == null) || (text_line.length() == 1))
+                
+                // PICK UP HERE
+                //String message = inputField.getText().trim();
+                
+                //text_line = inputField.getText().trim();
+                //inputField = new JTextField(text_line);
+                text_line = inputField.getText().trim();
+                System.out.println(text_line);
+                //addBubbleMessage(text_line, new Color(0, 122, 255), SwingConstants.RIGHT);
+                
+                inputField.setText("");
+
+                //text_line = message;
+                
+                //text_line = IOUtils.readInputTextLine();
+                
+                //sendMessage();
+                //text_line = inputField.getText().trim();
+                // PICK UP THERE
+                
+                if((text_line == null) || (text_line.length() == 1)){
+                    addBubbleMessage(text_line, new Color(0, 122, 255), SwingConstants.RIGHT);
                     text_line = MagicStrings.null_input;
+                }
                 if(text_line.equals("wq")){
                     System.exit(0);
                 }else if(text_line.equals("wq")){
@@ -61,6 +133,7 @@ public class Cs321Jarvis {
                     System.exit(0);
                 }else{
                     String request = text_line;
+                    addBubbleMessage(request, new Color(0, 122, 255), SwingConstants.RIGHT);
                     if(MagicBooleans.trace_mode)
                         System.out.append("STATE=" + request + ":THAT=" + ((History) chat_session.thatHistory.get(0)).get(0)+":TOPIC=" + chat_session.predicates.get("topic"));
                     String response = chat_session.multisentenceRespond(request);
@@ -69,14 +142,118 @@ public class Cs321Jarvis {
                     while(response.contains("gt")) // HAD AMP
                         response = response.replace("gt", "gt"); // FIRST ONE HAD AMP
                     System.out.println("Jarvis : " + response);
+                    addBubbleMessage(response, new Color(230, 230, 235), SwingConstants.LEFT); // Jarvis's message in gray
                 }
+                break;
             }
         } catch (Exception e){
             e.printStackTrace();
         }
-        */
-        //END ADDED
+    };
+    
+    private void addBubbleMessage(String message, Color bubbleColor, int alignment) {
+        // Create a new RoundedPanel for the chat bubble
+        roundedPanel bubble = new roundedPanel(bubbleColor, 20);  // Reduced corner radius for a sleeker look
+        bubble.setLayout(new BorderLayout());
+
+        // Create a JTextArea for the message that supports wrapping
+        JTextArea messageArea = new JTextArea(message);
+        messageArea.setLineWrap(true);
+        messageArea.setWrapStyleWord(true);
+        messageArea.setOpaque(false);
+        messageArea.setEditable(false);
+        messageArea.setFont(new Font("Arial", Font.PLAIN, 14));
+        messageArea.setBorder(new EmptyBorder(12, 16, 12, 16)); // Adjusted padding
+
+        // Calculate the preferred size of the text
+        int maxWidth = (int) (chatPanel.getWidth() * 0.75); // Maximum width is 75% of chat panel width
+        int minWidth = 50; // Minimum width to prevent tiny bubbles
+
+        // Calculate the width based on the text content
+        FontMetrics fm = messageArea.getFontMetrics(messageArea.getFont());
+        int textWidth = fm.stringWidth(message);
+        int lines = 1;
+        if (textWidth > maxWidth) {
+            if(maxWidth == 0)
+                maxWidth = 1;
+            lines = (textWidth / maxWidth) + 1;
+            textWidth = maxWidth;
+        }
+
+        int bubbleWidth = Math.max(minWidth, Math.min(textWidth + 39, maxWidth)); // 32 is for left and right padding
+
+        // Calculate the bubble height based on the number of lines
+        int bubbleHeight = Math.max(fm.getHeight() * lines + 30, 30); // 24 is for top and bottom padding, 40 is minimum height
+
+        // Set the preferred size of the bubble based on the calculated dimensions
+        bubble.setPreferredSize(new Dimension(bubbleWidth, bubbleHeight));
+
+        // Add the JTextArea to the bubble
+        bubble.add(messageArea, BorderLayout.CENTER);
+
+        // Set alignment for the message bubble and add it to the message panel
+        JPanel messagePanel = new JPanel();
+        messagePanel.setOpaque(false);
+
+        // Use FlowLayout for left or right alignment
+        if (alignment == SwingConstants.LEFT) {
+            messagePanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
+        } else {
+            messagePanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 5));
+        }
+
+        messagePanel.add(bubble);
+
+        // Add the message panel to the chat panel
+        chatPanel.add(messagePanel);
+        chatPanel.revalidate();
+        chatPanel.repaint();
+
+        // Scroll to the bottom of the chat panel
+        SwingUtilities.invokeLater(() -> {
+            JScrollBar vertical = scrollPane.getVerticalScrollBar();
+            vertical.setValue(vertical.getMaximum());
+        });
+    }
+    // ADDED GUI END
+    
+    public static void main (String[] args) {
+        //SwingUtilities.invokeLater(() -> new Cs321Jarvis());
         
+        MagicStrings.setRootPath();
+
+        AIMLProcessor.extension =  new PCAIMLProcessorExtension();
+        
+        mainFunction2(args);
+        
+        /*
+        addBubbleMessage("1 or 2: ", new Color(230, 230, 235), SwingConstants.LEFT); // Jarvis's message in gray
+        System.out.print("1 or 2: ");
+        //text_line = IOUtils.readInputTextLine();
+        text_line = inputField.getText().trim();
+        System.out.print(text_line);
+        if("1".equals(text_line)){
+            //SwingUtilities.invokeLater(() -> new jarvisGUI());
+            mainFunction(args);
+        }
+        else{
+            //SwingUtilities.invokeLater(() -> new jarvisGUI());
+            mainFunction2(args);
+        }
+        */
+    }
+    
+    
+    public static void convert(Bot bot, String action) {
+        if (action.equals("aiml2csv")) bot.writeAIMLIFFiles();
+        else if (action.equals("csv2aiml")) bot.writeAIMLFiles();
+    }
+
+    // Main func 2
+    
+    public static void mainFunction2(String[] args){
+        
+        System.out.println("Begining Function 2");
         
         //String botName = "alice2";
         MagicBooleans.jp_tokenize = false;
@@ -117,6 +294,7 @@ public class Cs321Jarvis {
         if (MagicBooleans.trace_mode) System.out.println("Action = '"+action+"'");
         if (action.equals("chat") || action.equals("chat-app")) {
 			boolean doWrites = ! action.equals("chat-app");
+                        //SwingUtilities.invokeLater(() -> new Cs321Jarvis());
 			TestAB.testChat(bot, doWrites, MagicBooleans.trace_mode);
 		}
         //else if (action.equals("test")) testSuite(bot, MagicStrings.root_path+"/data/find.txt");
@@ -132,227 +310,9 @@ public class Cs321Jarvis {
             catch (Exception ex) { ex.printStackTrace(); }
             }
         else System.out.println("Unrecognized action "+action);
-    }
-    
-    //ADDED
-    /*
-    private static String getResourcesPath(){
-        File curr_dir = new File(".");
-        String file_path = curr_dir.getAbsolutePath();
-        file_path = file_path.substring(0, file_path.length()-2);
-        System.out.println(file_path);
-        String resources_path = file_path + File.separator + "src" + File.separator + "main" + File.separator + "resources";
-        System.out.println(resources_path);
-        return resources_path;
-    }
-    */
-    //END ADDED
-    
-    
-    public static void convert(Bot bot, String action) {
-        if (action.equals("aiml2csv")) bot.writeAIMLIFFiles();
-        else if (action.equals("csv2aiml")) bot.writeAIMLFiles();
-    }
-
-
-    public static void getGloss (Bot bot, String filename) {
-        System.out.println("getGloss");
-        try{
-            // Open the file that is the first
-            // command line parameter
-            File file = new File(filename);
-            if (file.exists()) {
-                FileInputStream fstream = new FileInputStream(filename);
-                // Get the object
-                getGlossFromInputStream(bot, fstream);
-                fstream.close();
-            }
-        }catch (Exception e){//Catch exception if any
-            System.err.println("Error: " + e.getMessage());
-        }
-    }
-    public static void getGlossFromInputStream (Bot bot, InputStream in)  {
-        System.out.println("getGlossFromInputStream");
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        String strLine;
-        int cnt = 0;
-        int filecnt = 0;
-        HashMap<String, String> def = new HashMap<String, String>();
-        try {
-            //Read File Line By Line
-            String word; String gloss;
-            word = null;
-            gloss = null;
-            while ((strLine = br.readLine()) != null)   {
-
-                if (strLine.contains("<entry word")) {
-                    int start = strLine.indexOf("<entry word=\"")+"<entry word=\"".length();
-                    //int end = strLine.indexOf(" status=");
-                    int end = strLine.indexOf("#");
-
-                    word = strLine.substring(start, end);
-                    word = word.replaceAll("_"," ");
-                    System.out.println(word);
-
-                }
-                else  if (strLine.contains("<gloss>")) {
-                    gloss = strLine.replaceAll("<gloss>","");
-                    gloss = gloss.replaceAll("</gloss>","");
-                    gloss = gloss.trim();
-                    System.out.println(gloss);
-
-                }
-
-
-                if (word != null && gloss != null) {
-                    word = word.toLowerCase().trim();
-                    if (gloss.length() > 2) gloss = gloss.substring(0, 1).toUpperCase()+gloss.substring(1, gloss.length());
-                    String definition;
-                    if (def.keySet().contains(word))  {
-                        definition = def.get(word);
-                        definition = definition+"; "+gloss;
-                    }
-                    else definition = gloss;
-                    def.put(word, definition);
-                    word = null;
-                    gloss = null;
-                }
-            }
-            Category d = new Category(0,"WNDEF *","*","*","unknown","wndefs"+filecnt+".aiml");
-            bot.brain.addCategory(d);
-            for (String x : def.keySet()) {
-                word = x;
-                gloss = def.get(word)+".";
-                cnt++;
-                if (cnt%5000==0) filecnt++;
-
-                Category c = new Category(0,"WNDEF "+word,"*","*",gloss,"wndefs"+filecnt+".aiml");
-                System.out.println(cnt+" "+filecnt+" "+c.inputThatTopic()+":"+c.getTemplate()+":"+c.getFilename());
-                Nodemapper node;
-                if ((node = bot.brain.findNode(c)) != null) node.category.setTemplate(node.category.getTemplate()+","+gloss);
-                bot.brain.addCategory(c);
-
-
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public static void sraixCache (String filename, Chat chatSession) {
-        int limit = 1000;
-        try {
-            FileInputStream fstream = new FileInputStream(filename);
-            // Get the object
-            BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-            String strLine;
-            //Read File Line By Line
-            int count = 0;
-            while ((strLine = br.readLine()) != null && count++ < limit) {
-                System.out.println("Human: " + strLine);
-
-                String response = chatSession.multisentenceRespond(strLine);
-                System.out.println("Robot: " + response);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-    
-    
-    
-    // Main func 2
-    //private static final boolean TRACEMODE = false;
-    //static String bot_name = "alice2";
-    
-    public static void mainFunction2(String[] args){
-                System.out.println("Begining Function 2");
-        try{
-            String resources_path = getResourcesPath();
-            System.out.println(resources_path);
-            MagicBooleans.trace_mode = TRACEMODE;
-            Bot bot = new Bot("alice2", resources_path);
-            Chat chat_session = new Chat(bot);
-            bot.brain.nodeStats();
-            String text_line = "";
-            while(true){
-                System.out.print("Human: ");
-                text_line = IOUtils.readInputTextLine();
-                if((text_line == null) || (text_line.length() == 1))
-                    text_line = MagicStrings.null_input;
-                if(text_line.equals("wq")){
-                    System.exit(0);
-                }else if(text_line.equals("wq")){
-                    bot.writeQuit();
-                    System.exit(0);
-                }else{
-                    String request = text_line;
-                    if(MagicBooleans.trace_mode)
-                        System.out.append("STATE=" + request + ":THAT=" + ((History) chat_session.thatHistory.get(0)).get(0)+":TOPIC=" + chat_session.predicates.get("topic"));
-                    String response = chat_session.multisentenceRespond(request);
-                    while(response.contains("It")) // HAD AMP
-                        response = response.replace("It", "It"); // FIRST ONE HAD AMP
-                    while(response.contains("gt")) // HAD AMP
-                        response = response.replace("gt", "gt"); // FIRST ONE HAD AMP
-                    System.out.println("Jarvis : " + response);
-                }
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    private static String getResourcesPath(){
-        File curr_dir = new File(".");
-        String file_path = curr_dir.getAbsolutePath();
-        file_path = file_path.substring(0, file_path.length()-2);
-        System.out.println(file_path);
-        String resources_path = file_path + File.separator + "src" + File.separator + "main" + File.separator + "resources";
-        System.out.println(resources_path);
-        return resources_path;
-    }
-
-
-}
-
-/*
-public class Cs321Jarvis{
-    private static final boolean TRACEMODE = false;
-    static String bot_name = "alice2";
-    
-    public static void mainFunction2(String[] args){
-        try{
-            String resources_path = getResourcesPath();
-            System.out.println(resources_path);
-            MagicBooleans.trace_mode = TRACEMODE;
-            Bot bot = new Bot("alice2", resources_path);
-            Chat chat_session = new Chat(bot);
-            bot.brain.nodeStats();
-            String text_line = "";
-            while(true){
-                System.out.print("Human: ");
-                text_line = IOUtils.readInputTextLine();
-                if((text_line == null) || (text_line.length() == 1))
-                    text_line = MagicStrings.null_input;
-                if(text_line.equals("wq")){
-                    System.exit(0);
-                }else if(text_line.equals("wq")){
-                    bot.writeQuit();
-                    System.exit(0);
-                }else{
-                    String request = text_line;
-                    if(MagicBooleans.trace_mode)
-                        System.out.append("STATE=" + request + ":THAT=" + ((History) chat_session.thatHistory.get(0)).get(0)+":TOPIC=" + chat_session.predicates.get("topic"));
-                    String response = chat_session.multisentenceRespond(request);
-                    while(response.contains("It")) // HAD AMP
-                        response = response.replace("It", "It"); // FIRST ONE HAD AMP
-                    while(response.contains("gt")) // HAD AMP
-                        response = response.replace("gt", "gt"); // FIRST ONE HAD AMP
-                    System.out.println("Jarvis : " + response);
-                }
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        
+        //SwingUtilities.invokeLater(() -> new Cs321Jarvis());
+        
     }
     private static String getResourcesPath(){
         File curr_dir = new File(".");
@@ -364,4 +324,3 @@ public class Cs321Jarvis{
         return resources_path;
     }
 }
-*/
