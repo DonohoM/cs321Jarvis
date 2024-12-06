@@ -6,16 +6,13 @@ import org.alicebot.ab.Chat;
 import org.alicebot.ab.History;
 import org.alicebot.ab.MagicBooleans;
 import org.alicebot.ab.MagicStrings;
-import org.alicebot.ab.utils.IOUtils;
 
 import java.io.*;
-import java.util.HashMap;
 import org.alicebot.ab.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.border.EmptyBorder;
 
 //import com.mycompany.cs321jarvis.jarvisGUI;
@@ -225,22 +222,6 @@ public class Cs321Jarvis extends JFrame{
         AIMLProcessor.extension =  new PCAIMLProcessorExtension();
         
         mainFunction2(args);
-        
-        /*
-        addBubbleMessage("1 or 2: ", new Color(230, 230, 235), SwingConstants.LEFT); // Jarvis's message in gray
-        System.out.print("1 or 2: ");
-        //text_line = IOUtils.readInputTextLine();
-        text_line = inputField.getText().trim();
-        System.out.print(text_line);
-        if("1".equals(text_line)){
-            //SwingUtilities.invokeLater(() -> new jarvisGUI());
-            mainFunction(args);
-        }
-        else{
-            //SwingUtilities.invokeLater(() -> new jarvisGUI());
-            mainFunction2(args);
-        }
-        */
     }
     
     
@@ -255,9 +236,7 @@ public class Cs321Jarvis extends JFrame{
         
         System.out.println("Begining Function 2");
         
-        //String botName = "alice2";
         MagicBooleans.jp_tokenize = false;
-        //MagicBooleans.trace_mode = true;
         String action="chat";
         System.out.println(MagicStrings.program_name_version);
         for (String s : args) {
@@ -294,7 +273,7 @@ public class Cs321Jarvis extends JFrame{
         if (MagicBooleans.trace_mode) System.out.println("Action = '"+action+"'");
         if (action.equals("chat") || action.equals("chat-app")) {
 			boolean doWrites = ! action.equals("chat-app");
-                        //SwingUtilities.invokeLater(() -> new Cs321Jarvis());
+                        SwingUtilities.invokeLater(() -> new Cs321Jarvis());
 			TestAB.testChat(bot, doWrites, MagicBooleans.trace_mode);
 		}
         //else if (action.equals("test")) testSuite(bot, MagicStrings.root_path+"/data/find.txt");

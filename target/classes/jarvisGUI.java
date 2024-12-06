@@ -82,8 +82,8 @@ public class jarvisGUI extends JFrame {
  
     private void addBubbleMessage(String message, Color bubbleColor, int alignment) {
         // Create a new RoundedPanel for the chat bubble
-        roundedPanel bubble = new roundedPanel(bubbleColor, 20);  // Reduced corner radius for a sleeker look
-        bubble.setLayout(new BorderLayout());
+        //roundedPanel bubble = new roundedPanel(bubbleColor, 20);  // Reduced corner radius for a sleeker look
+        //bubble.setLayout(new BorderLayout());
 
         // Create a JTextArea for the message that supports wrapping
         JTextArea messageArea = new JTextArea(message);
@@ -113,10 +113,10 @@ public class jarvisGUI extends JFrame {
         int bubbleHeight = Math.max(fm.getHeight() * lines + 30, 30); // 24 is for top and bottom padding, 40 is minimum height
 
         // Set the preferred size of the bubble based on the calculated dimensions
-        bubble.setPreferredSize(new Dimension(bubbleWidth, bubbleHeight));
+        //bubble.setPreferredSize(new Dimension(bubbleWidth, bubbleHeight));
 
         // Add the JTextArea to the bubble
-        bubble.add(messageArea, BorderLayout.CENTER);
+        //bubble.add(messageArea, BorderLayout.CENTER);
 
         // Set alignment for the message bubble and add it to the message panel
         JPanel messagePanel = new JPanel();
@@ -129,7 +129,7 @@ public class jarvisGUI extends JFrame {
             messagePanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 5));
         }
 
-        messagePanel.add(bubble);
+        //messagePanel.add(bubble);
 
         // Add the message panel to the chat panel
         chatPanel.add(messagePanel);
