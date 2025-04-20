@@ -1,7 +1,10 @@
 
 Jarvis: The Support Chatbot
 
-Jarvis is an interactive chatbot built using Alice2.0 and AIML (Artificial Intelligence Markup Language) designed to offer emotional support and kind words to its users. When you need a little encouragement or a comforting conversation, Jarvis is there for you.
+Jarvis is an interactive chatbot built using Alice2.0 and AIML (Artificial Intelligence Markup Language) designed 
+to offer emotional support and kind words to its users. When you need a little encouragement or a comforting 
+conversation, Jarvis is there for you.
+
 Features
 
     A chatbot powered by Alice2.0 and AIML, known for its ability to understand and respond in natural language.
@@ -14,26 +17,27 @@ Technologies Used
     AIML (Artificial Intelligence Markup Language): A markup language used for creating conversation patterns.
     AliceBot2.0: A chatbot engine that interprets AIML files and generates responses.
 
-Installation
+INSTRUCTIONS
 
-    Clone the Repository:
-    Begin by cloning the repository to your local machine:
+    Dependencies:
+    This project uses Java, so make sure you have the latest version of Java installed. The Java Development Kit is
+    required to compile the project. If you're unsure, you can install it via Oracle's website.
 
-git clone https://github.com/DonohoM/jarvis.git
-cd jarvis
+    Runing the program:
 
-Dependencies:
-This project uses Java, so make sure you have the latest version of Java installed. If you're unsure, you can install it via Oracle's website.
+    The Jar file has dependencies that require it to be run from the root of the project folder. Dont run the one from the target folder,
+    it wont work unless you move it outside of the target folder and into the root of the project folder. 
 
-Build the Project:
-If you're using a build tool like Maven or Gradle, you can use it to build the project. Otherwise, compile the Java files manually:
+    If the jar file still doesnt work after you double click on it, then navigate to the root folder and run:
+    java -jar target/cs321Jarvis-1.0-SNAPSHOT.jar   
+    in your terminal
+    
 
-javac -d bin src/*.java
+    Building:
+    Use maven to build the project (Cs321Jarvis.java) from the netbeans IDE or from the terminal.
 
-Run the Project:
-After building, you can run the main program using:
-
-    java -cp bin Cs321Jarvis
+    Run the Project:
+    After building, you can run the main program (Cs321Jarvis.java) using the run button at the top of the netbeans IDE. 
 
 Usage
 

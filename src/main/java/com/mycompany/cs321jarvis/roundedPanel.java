@@ -7,8 +7,6 @@ package com.mycompany.cs321jarvis;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 
 class roundedPanel extends JPanel {
     private Color backgroundColor;

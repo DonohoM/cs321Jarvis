@@ -1,19 +1,12 @@
 package com.mycompany.cs321jarvis;
 
-import java.io.File;
-import org.alicebot.ab.Bot;
-import org.alicebot.ab.Chat;
-import org.alicebot.ab.History;
-import org.alicebot.ab.MagicBooleans;
-import org.alicebot.ab.MagicStrings;
-
-import java.io.*;
 import org.alicebot.ab.*;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import javax.swing.border.EmptyBorder;
+import java.io.File;
 
 //import com.mycompany.cs321jarvis.jarvisGUI;
 
@@ -97,27 +90,12 @@ public class Cs321Jarvis extends JFrame{
             
             // add the invoce later here but in the main func 2 
             while(true){
-                //text_line = "";
                 System.out.print("Human: ");
                 
-                // PICK UP HERE
-                //String message = inputField.getText().trim();
-                
-                //text_line = inputField.getText().trim();
-                //inputField = new JTextField(text_line);
                 text_line = inputField.getText().trim();
                 System.out.println(text_line);
-                //addBubbleMessage(text_line, new Color(0, 122, 255), SwingConstants.RIGHT);
                 
                 inputField.setText("");
-
-                //text_line = message;
-                
-                //text_line = IOUtils.readInputTextLine();
-                
-                //sendMessage();
-                //text_line = inputField.getText().trim();
-                // PICK UP THERE
                 
                 if((text_line == null) || (text_line.length() == 1)){
                     addBubbleMessage(text_line, new Color(0, 122, 255), SwingConstants.RIGHT);
@@ -273,6 +251,7 @@ public class Cs321Jarvis extends JFrame{
         if (MagicBooleans.trace_mode) System.out.println("Action = '"+action+"'");
         if (action.equals("chat") || action.equals("chat-app")) {
 			boolean doWrites = ! action.equals("chat-app");
+                        // comment out below line for developer mode
                         SwingUtilities.invokeLater(() -> new Cs321Jarvis());
 			TestAB.testChat(bot, doWrites, MagicBooleans.trace_mode);
 		}
